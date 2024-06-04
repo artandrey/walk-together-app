@@ -1,5 +1,4 @@
-package com.fitnesstracker
-
+package com.walktohether
 import android.app.Application
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication

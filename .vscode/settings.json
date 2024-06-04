@@ -1,0 +1,5 @@
+{
+  "java.compile.nullAnalysis.mode": "automatic",
+  "cSpell.words": ["inversify", "Moti", "signin", "supabase"],
+  "java.configuration.updateBuildConfiguration": "interactive"
+}
