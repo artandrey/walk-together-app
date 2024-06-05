@@ -1,13 +1,15 @@
 import React from 'react';
 import {ScrollView, StyleSheet, Text} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import {CircularProgressButton} from '../../../feat/circular-progress-button';
-import {Text as MotiText, View} from 'moti';
+import {View} from 'moti';
 import {palette} from '../../../styles/theme';
 import {Carousel} from './carousel';
 import {onboardingSlides} from '../onboarding-steps';
 import {useCarouselState} from '../models/carousel';
 import {useNavigate} from 'react-router-native';
+import {HeadingText} from '../../../feat/heading-text';
+import {Container} from '../../../feat/container';
+import {WithGradientBackground} from '../../../feat/gradient-background';
 
 export const OnboardingPage = () => {
   const {currentIndex, next, canGoNext} = useCarouselState({
@@ -29,57 +31,43 @@ export const OnboardingPage = () => {
   );
 
   return (
-    <LinearGradient
-      style={styles.wrapper}
-      colors={['#FFFFFF', '#FAF4FF', '#FCFAE9']}>
-      <ScrollView>
-        <View style={styles.container}>
-          <MotiText style={styles.headerText}>
+    <WithGradientBackground>
+      <ScrollView contentContainerStyle={styles.scroll}>
+        <Container>
+          <HeadingText style={styles.headingText}>
             Welcome to Walk Together -
-          </MotiText>
+          </HeadingText>
           <Carousel currentIndex={currentIndex} steps={onboardingSlides} />
-        </View>
+          <View style={styles.nextButtonContainer}>
+            <CircularProgressButton
+              padding={20}
+              color={palette.accent}
+              progressBar={{
+                borderWidth: 3,
+                color: palette.accent,
+                radius: 50,
+                percentage: onboardingProgressPercent,
+                duration: 1000,
+              }}
+              onPress={handleNextClick}>
+              <Text>123</Text>
+            </CircularProgressButton>
+          </View>
+        </Container>
       </ScrollView>
-      <View style={styles.nextButtonContainer}>
-        <CircularProgressButton
-          padding={20}
-          color={palette.accent}
-          progressBar={{
-            borderWidth: 3,
-            color: palette.accent,
-            radius: 50,
-            percentage: onboardingProgressPercent,
-            duration: 1000,
-          }}
-          onPress={handleNextClick}>
-          <Text>123</Text>
-        </CircularProgressButton>
-      </View>
-    </LinearGradient>
+    </WithGradientBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
+  scroll: {
     flex: 1,
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerText: {
-    width: 300,
+  headingText: {
     marginTop: 90,
-    textAlign: 'center',
-    fontSize: 36,
-    letterSpacing: 1.1,
-    fontWeight: 'bold',
-    color: palette.textMain,
   },
   nextButtonContainer: {
-    position: 'absolute',
-    bottom: 60,
+    marginTop: 'auto',
     alignSelf: 'center',
   },
 });

@@ -37,12 +37,10 @@ export const Carousel: FC<CarouselProps> = ({steps, currentIndex}) => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 120,
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   svgViewContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -5,9 +5,9 @@ import {
   TextInput,
   TextInputFocusEventData,
   TextInputProps,
-  View,
 } from 'react-native';
 import {palette} from '../../styles/theme';
+import {MotiView} from 'moti';
 
 export interface InputProps extends TextInputProps {
   isError?: boolean;
@@ -38,7 +38,11 @@ export const Input: FC<InputProps> = ({
     isFocused ? palette.accent : palette.textSecondary,
   );
   return (
-    <View style={styles.wrapper}>
+    <MotiView
+      from={{opacity: 0}}
+      animate={{opacity: 1}}
+      delay={100}
+      style={styles.wrapper}>
       <TextInput
         onFocus={handleFocus}
         onBlur={handleBlur}
@@ -46,7 +50,7 @@ export const Input: FC<InputProps> = ({
         placeholderTextColor={palette.textSecondary}
         {...rest}
       />
-    </View>
+    </MotiView>
   );
 };
 

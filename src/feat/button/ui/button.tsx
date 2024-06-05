@@ -3,9 +3,11 @@ import React, {FC, ReactNode} from 'react';
 import {StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native';
 import {GenericTouchableProps} from 'react-native-gesture-handler/lib/typescript/components/touchables/GenericTouchable';
-import {palette} from '../../styles/theme';
+import {palette} from '../../../styles/theme';
+import {LoadingSvgAnimation} from './loder';
 
 export type ButtonSize = 'small' | 'medium' | 'large';
+export type ButtonVariant = 'solid' | 'ghost';
 
 const buttonSizeStyles: Record<ButtonSize, ViewStyle> = {
   small: {
@@ -37,18 +39,38 @@ const textSizeStyles: Record<ButtonSize, TextStyle> = {
   },
 };
 
+const getVariantStyles = (options: Required<ButtonStylesOptions>) => {
+  const {variant} = options;
+  const color = options.disabled ? options.disabledColor : options.defaultColor;
+  const styles: Record<ButtonVariant, ViewStyle> = {
+    solid: {
+      backgroundColor: color,
+    },
+    ghost: {
+      backgroundColor: 'transparent',
+      borderColor: color,
+      borderWidth: 2,
+      borderStyle: 'solid',
+    },
+  };
+
+  return styles[variant];
+};
+
 export interface ButtonStyles {
   defaultColor?: string;
   disabledColor?: string;
   pressedColor?: string;
   contentColor?: string;
   size?: ButtonSize;
+  variant?: ButtonVariant;
 }
 
 export interface ButtonProps extends GenericTouchableProps, ButtonStyles {
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   children?: string;
+  isLoading?: boolean;
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -58,22 +80,29 @@ export const Button: FC<ButtonProps> = ({
   onPressIn,
   onPressOut,
   disabled = false,
+  isLoading = false,
   defaultColor = palette.accent,
   disabledColor = palette.accent,
   pressedColor = palette.accentPressed,
   contentColor = palette.foreground,
   style,
   size = 'large',
+  variant = 'solid',
   ...rest
 }) => {
   const pointState = useAnimationState({
     pressedIn: {
       scale: 1.01,
-      backgroundColor: [{value: pressedColor, duration: 100}],
+      backgroundColor: [
+        {
+          value: variant === 'ghost' ? 'transparent' : pressedColor,
+          duration: 100,
+        },
+      ],
     },
     pressedOut: {
       scale: 1,
-      backgroundColor: defaultColor,
+      backgroundColor: 'ghost' ? 'transparent' : defaultColor,
     },
   });
 
@@ -87,13 +116,16 @@ export const Button: FC<ButtonProps> = ({
     onPressOut?.();
   };
 
+  const isDisabled = disabled || isLoading;
+
   const styles = createStyles({
     defaultColor,
     disabledColor,
     contentColor,
     pressedColor,
-    disabled,
+    disabled: isDisabled,
     size,
+    variant,
   });
 
   return (
@@ -101,9 +133,10 @@ export const Button: FC<ButtonProps> = ({
       <TouchableWithoutFeedback
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
-        disabled={disabled}
+        disabled={isDisabled}
         {...rest}>
         <MotiView state={pointState} style={styles.buttonContent}>
+          {isLoading && <LoadingSvgAnimation style={styles.loadingSvg} />}
           <View>{leftIcon}</View>
           <Text style={styles.textContent}>{children}</Text>
           <View>{rightIcon}</View>
@@ -124,18 +157,25 @@ const createStyles = (options: Required<ButtonStylesOptions>) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      backgroundColor: options.disabled
-        ? options.disabledColor
-        : options.defaultColor,
+      overflow: 'hidden',
+      ...getVariantStyles(options),
     },
     textContent: {
       ...textSizeStyles[options.size],
-      color: options.contentColor,
-      fontWeight: '800',
+      color:
+        options.variant === 'ghost'
+          ? options.defaultColor
+          : options.contentColor,
+      fontWeight: options.variant === 'ghost' ? '400' : '800',
       letterSpacing: 1.1,
       position: 'absolute',
       left: 0,
       right: 0,
       textAlign: 'center',
+    },
+    loadingSvg: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
     },
   });

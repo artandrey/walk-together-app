@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {FormField} from '../../feat/form-field';
 import {Controller, useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -8,14 +8,18 @@ import {Button} from '../../feat/button';
 
 interface CredentialsFormProps {
   onSubmit: (credentials: Credentials) => Promise<void>;
+  buttonText: string;
 }
 
-export const CredentialsForm: FC<CredentialsFormProps> = ({onSubmit}) => {
+export const CredentialsForm: FC<CredentialsFormProps> = ({
+  onSubmit,
+  buttonText,
+}) => {
   const form = useForm<Credentials>({
     resolver: zodResolver(credentialsValidationSchema),
   });
   const {
-    formState: {disabled},
+    formState: {disabled, isSubmitting},
     handleSubmit,
   } = form;
 
@@ -59,8 +63,9 @@ export const CredentialsForm: FC<CredentialsFormProps> = ({onSubmit}) => {
       <Button
         onPress={handleSubmit(onSubmit)}
         disabled={disabled}
+        isLoading={isSubmitting}
         style={styles.submitButtonStyles}>
-        Sign in
+        {buttonText}
       </Button>
     </View>
   );

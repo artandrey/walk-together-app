@@ -16,12 +16,16 @@ import {withDelay} from '../../../feat/loading-with-delay';
 
 const AnimationHeadingText = motify(HeadingText)();
 
-export const SignInPage = () => {
-  const navigate = useNavigate();
+export const SignUpPage = () => {
   const authService = useInjection(AuthService);
 
+  const navigate = useNavigate();
+
   const handleCredentialsSignIn = async (credentials: Credentials) => {
-    await withDelay(authService.signInWithCredentials(credentials));
+    console.log(credentials);
+
+    await withDelay(authService.signUpWithCredentials(credentials));
+    navigate('/profile-setup');
   };
 
   return (
@@ -32,23 +36,23 @@ export const SignInPage = () => {
             from={{opacity: 0, translateY: 5}}
             animate={{opacity: 1, translateY: 0}}
             style={styles.headingText}>
-            Please, sign in to your account
+            Please, create an account
           </AnimationHeadingText>
           <View style={styles.wrapper}>
             <CredentialsForm
-              buttonText="Sign in"
+              buttonText="Sign up"
               onSubmit={handleCredentialsSignIn}
             />
             <DashSeparatedText style={styles.separatingText}>
-              or login with
+              or continue with
             </DashSeparatedText>
             <SignInWithGoogleButton style={styles.googleButton} />
             <Text style={styles.alternativeActionText}>
-              <Text>Don’t have an account? </Text>
+              <Text>Already have an account? </Text>
               <Text
-                onPress={() => navigate('/sign-up')}
+                onPress={() => navigate('/sign-in')}
                 style={styles.alternativeActionTextLink}>
-                Sign up
+                Sign in
               </Text>
             </Text>
           </View>

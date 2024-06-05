@@ -1,8 +1,8 @@
 import React, {FC, useEffect, useRef} from 'react';
 import {Input, InputProps} from '../input';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {palette} from '../../styles/theme';
-import {MotiView, useAnimationState} from 'moti';
+import {MotiText, MotiView, useAnimationState} from 'moti';
 
 export interface FormFieldProps extends InputProps {
   label?: string;
@@ -15,6 +15,7 @@ export const FormField: FC<FormFieldProps> = ({
   errorMessage,
   isError = false,
   value,
+  style,
   ...otherProps
 }) => {
   const shake = useAnimationState({
@@ -42,10 +43,24 @@ export const FormField: FC<FormFieldProps> = ({
     <MotiView
       transition={{duration: 100, type: 'timing'}}
       state={shake}
-      style={styles.wrapper}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      style={[styles.wrapper, style]}>
+      {label && (
+        <MotiText
+          from={{opacity: 0, translateY: -4}}
+          animate={{opacity: 1, translateY: 0}}
+          style={styles.label}>
+          {label}
+        </MotiText>
+      )}
       <Input value={value} isError={isError} {...otherProps} />
-      {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+      {errorMessage && (
+        <MotiText
+          from={{opacity: 0, translateY: -4}}
+          animate={{opacity: 1, translateY: 0}}
+          style={styles.errorText}>
+          {errorMessage}
+        </MotiText>
+      )}
     </MotiView>
   );
 };

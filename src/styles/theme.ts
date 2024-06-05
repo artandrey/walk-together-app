@@ -6,4 +6,5 @@ export const palette = {
   accentDisabled: '#D2C2DD',
   foreground: '#FFFFFF',
   error: '#F97C7C',
+  gradient: ['#FFFFFF', '#FAF4FF', '#FCFAE9'],
 };

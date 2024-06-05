@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   public async signUpWithCredentials(credentials: SignUpCredentials) {
-    await supabase.auth.signInWithPassword({
+    await supabase.auth.signUp({
       email: credentials.email,
       password: credentials.password,
     });
