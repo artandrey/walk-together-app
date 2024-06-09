@@ -1,29 +1,40 @@
 import {View} from 'moti';
 import React, {FC} from 'react';
 import {Controller, useForm} from 'react-hook-form';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet} from 'react-native';
 import AvatarPicker from '../avatar-picker/ui';
 import {FormField} from '../form-field';
 import {
   SaveProfileSettings as ProfileSettings,
   profileSettingsSchema,
+  useProfileChange,
 } from './models';
 import {Button} from '../button';
 import {zodResolver} from '@hookform/resolvers/zod';
 
 export interface ProfileSettingsFormProps {
-  defaultValues?: ProfileSettings;
+  values?: ProfileSettings;
+  onProfileUpdate?: () => void;
 }
 
 export const ProfileSettingsForm: FC<ProfileSettingsFormProps> = ({
-  defaultValues,
+  values,
+  onProfileUpdate,
 }) => {
   const form = useForm<ProfileSettings>({
     resolver: zodResolver(profileSettingsSchema),
-    defaultValues,
+    values,
   });
 
-  const handleProfileSave = (settings: ProfileSettings) => {};
+  const [setProfile, isLoading] = useProfileChange();
+
+  const handleProfileSave = async (settings: ProfileSettings) => {
+    await setProfile({
+      nickname: settings.profileName,
+      profilePicturePath: settings.profilePicture,
+    });
+    onProfileUpdate?.();
+  };
 
   const {handleSubmit, control} = form;
   return (
@@ -59,15 +70,17 @@ export const ProfileSettingsForm: FC<ProfileSettingsFormProps> = ({
           )}
         />
       </View>
-      <Button onPress={handleSubmit(handleProfileSave)}>Save profile</Button>
+      <Button isLoading={isLoading} onPress={handleSubmit(handleProfileSave)}>
+        Save profile
+      </Button>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   formWrapper: {
-    alignSelf: 'stretch',
     justifyContent: 'space-between',
+    alignSelf: 'stretch',
     gap: 60,
     flex: 1,
   },

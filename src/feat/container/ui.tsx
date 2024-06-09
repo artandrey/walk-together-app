@@ -13,9 +13,8 @@ const createStyles = (containerStyles?: ViewStyle) =>
       minHeight: 700,
       paddingHorizontal: 30,
       flex: 1,
-      justifyContent: 'center',
       alignItems: 'center',
-      paddingBottom: 60,
+      paddingBottom: 30,
       ...containerStyles,
     },
   });

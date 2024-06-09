@@ -34,6 +34,10 @@ export class AuthService {
       email: credentials.email,
       password: credentials.password,
     });
+    await this.signInWithCredentials({
+      email: credentials.email,
+      password: credentials.password,
+    });
   }
 
   public async signInWithCredentials(credentials: SignUpCredentials) {
@@ -41,5 +45,10 @@ export class AuthService {
       email: credentials.email,
       password: credentials.password,
     });
+  }
+
+  public async getToken() {
+    const session = await supabase.auth.getSession();
+    return session.data.session?.access_token;
   }
 }

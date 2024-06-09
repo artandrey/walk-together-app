@@ -6,7 +6,7 @@ const wait = (delay?: number) => {
 
 export async function withDelay<T>(
   promise: Promise<T>,
-  delay: number = 1500,
+  delay: number = 2000,
 ): Promise<T> {
   return (await Promise.all([promise, wait(delay)]))[0];
 }

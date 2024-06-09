@@ -4,7 +4,7 @@ import {StyleSheet, Text, TextStyle, View, ViewStyle} from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native';
 import {GenericTouchableProps} from 'react-native-gesture-handler/lib/typescript/components/touchables/GenericTouchable';
 import {palette} from '../../../styles/theme';
-import {LoadingSvgAnimation} from './loder';
+import {LoadingSvgAnimation} from './loader';
 
 export type ButtonSize = 'small' | 'medium' | 'large';
 export type ButtonVariant = 'solid' | 'ghost';
@@ -93,16 +93,11 @@ export const Button: FC<ButtonProps> = ({
   const pointState = useAnimationState({
     pressedIn: {
       scale: 1.01,
-      backgroundColor: [
-        {
-          value: variant === 'ghost' ? 'transparent' : pressedColor,
-          duration: 100,
-        },
-      ],
+      backgroundColor: variant === 'ghost' ? 'transparent' : pressedColor,
     },
     pressedOut: {
       scale: 1,
-      backgroundColor: 'ghost' ? 'transparent' : defaultColor,
+      backgroundColor: variant === 'ghost' ? 'transparent' : defaultColor,
     },
   });
 
@@ -136,7 +131,7 @@ export const Button: FC<ButtonProps> = ({
         disabled={isDisabled}
         {...rest}>
         <MotiView state={pointState} style={styles.buttonContent}>
-          {isLoading && <LoadingSvgAnimation style={styles.loadingSvg} />}
+          <LoadingSvgAnimation show={isLoading} style={styles.loadingSvg} />
           <View>{leftIcon}</View>
           <Text style={styles.textContent}>{children}</Text>
           <View>{rightIcon}</View>

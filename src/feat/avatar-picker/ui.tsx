@@ -52,7 +52,7 @@ const AvatarPicker: React.FC<AvatarPickerProps> = ({
       }
       const base64 = response.assets[0].base64;
       if (base64) {
-        onSelect?.(base64);
+        onSelect?.(`data:${response.assets[0].type};base64,` + base64);
       }
     }
   };
